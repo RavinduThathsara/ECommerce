@@ -9,8 +9,7 @@ import productRouter from './routes/productRouter.js';
 import userRouter from './routes/userRouter.js';
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
-
-dotenv.config()
+dotenv.config();
 
 
 const app = express();
@@ -71,7 +70,7 @@ app.use(
         console.log(token);
 
         if(token !=null){
-            jwt.verify(token,"cbc-secret-key-7973",(error , decoded)=>{
+            jwt.verify(token,process.env.SECRET,(error , decoded)=>{
                 
                 if(!error){
                    // console.log(decoded)

@@ -3,15 +3,18 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 import mongoose from 'mongoose';
-import Student from './models/Student.js';
+//import Student from './models/Student.js';
 //import StudentRouter from './routes/StudentRouter.js';
 import productRouter from './routes/productRouter.js';
 import userRouter from './routes/userRouter.js';
 import jwt from "jsonwebtoken";
+import dotenv from "dotenv";
+
+dotenv.config()
 
 
 const app = express();
-const mongoUrl = "mongodb+srv://Admin:Ravindu@cluster0.xejpojj.mongodb.net/?appName=Cluster0"
+const mongoUrl = process.env.MONGO_DB_URL
 
 
  mongoose.connect (mongoUrl,{})

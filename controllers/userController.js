@@ -7,21 +7,49 @@ dotenv.config();
 export function createUser(req,res){
 
     const newUserData = req.body
-    newUserData.password = bcrypt.hashSync(newUserData.password,10);
+    
+    if(newUserData.type === "admin"){
 
-    const user = new User(newUserData)
+        if(req.user == null){
+            res.json ({
+                message :"please login as administrator to create admin accounts"
 
+            })
+            return 
+        }
+    }
+    if(req.user.type !== "admin"){
+
+        res.json({
+
+            message : "please login as administator to create admin accounts"
+        })
+        return 
+    }
     //console.log(newUserData)
+     newUserData.password = bcrypt.hashSync(newUserData.password,10);
+     const user = new User(newUserData)
 
-    user.save().then(()=>{
+    /*user.save().then(()=>{
         res.json({
             message: "User Creaated"
          })
-    }).catch(()=>{
+    }).catch((error)=>{
         res.json({
             message : "User not Created"
       })
-    })
+    })*/
+
+      user.save()
+        .then(() => {
+            res.status(201).json({ message: "User created successfully" });
+        })
+        .catch((error) => {
+            res.status(400).json({
+                message: "User not created",
+                error: error.message
+            });
+        });
 } 
 
 export function loginUser(req,res){

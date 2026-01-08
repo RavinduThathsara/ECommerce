@@ -38,3 +38,6 @@ const userSchema = mongoose.Schema({
 const User = mongoose.model("users",userSchema)
 
 export default User;
+
+// "password": "$2b$10$XQh5R9FzExampleHashedPassword",
+// "email": "ravindu37@example.com",

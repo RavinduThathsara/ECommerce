@@ -4,31 +4,31 @@ import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 dotenv.config();
 
-export function createUser(req,res){
+export function createUser(req, res) {
 
     const newUserData = req.body
-    
-    if(newUserData.type === "admin"){
 
-        if(req.user == null){
-            res.json ({
-                message :"please login as administrator to create admin accounts"
+    if (newUserData.type == "admin") {
+
+        if (req.user == null) {
+            res.json({
+                message: "please login as administrator to create admin accounts"
 
             })
-            return 
+            return
         }
     }
-    if(req.user.type !== "admin"){
+    if (req.user.type != "admin") {
 
         res.json({
 
-            message : "please login as administator to create admin accounts"
+            message: "please login as administator to create admin accounts"
         })
-        return 
+        return
     }
     //console.log(newUserData)
-     newUserData.password = bcrypt.hashSync(newUserData.password,10);
-     const user = new User(newUserData)
+    newUserData.password = bcrypt.hashSync(newUserData.password, 10);
+    const user = new User(newUserData)
 
     /*user.save().then(()=>{
         res.json({
@@ -40,7 +40,7 @@ export function createUser(req,res){
       })
     })*/
 
-      user.save()
+    user.save()
         .then(() => {
             res.status(201).json({ message: "User created successfully" });
         })
@@ -50,43 +50,43 @@ export function createUser(req,res){
                 error: error.message
             });
         });
-} 
+}
 
-export function loginUser(req,res){
+export function loginUser(req, res) {
 
-    User.find({email :req.body.email}).then(
-        (users)=>{
-            if(users.length  == 0){
+    User.find({ email: req.body.email }).then(
+        (users) => {
+            if (users.length == 0) {
                 res.json({
-                    message :"User not Found"
+                    message: "User not Found"
                 })
 
-            }else{
+            } else {
 
                 const user = users[0]
 
-                const isPasswordCorrect = bcrypt.compareSync(req.body.password,user.password)
+                const isPasswordCorrect = bcrypt.compareSync(req.body.password, user.password)
 
-                if(isPasswordCorrect){
-                    
+                if (isPasswordCorrect) {
+
                     const token = jwt.sign({
-                        email       : user.email,
-                        firstName   : user.firstName,
-                        lastName    : user.lastName,
-                        isBlocked   : user.isBlocked,
-                        type        : user.type,
-                        profilePicture:user.profilePicture,
-                            
-                        },process.env.SECRET)
-                        
-                        res.json({
-                            message : "User Logged in ",
-                            token :token
-                        })
+                        email: user.email,
+                        firstName: user.firstName,
+                        lastName: user.lastName,
+                        isBlocked: user.isBlocked,
+                        type: user.type,
+                        profilePicture: user.profilePicture,
 
-                }else{
+                    }, process.env.SECRET)
+
                     res.json({
-                        message :"User not logged in Wrong password"
+                        message: "User Logged in ",
+                        token: token
+                    })
+
+                } else {
+                    res.json({
+                        message: "User not logged in Wrong password"
                     })
                 }
             }
@@ -103,3 +103,27 @@ export function deleteUser(req,res){
         })
     })
 }*/
+
+export function isAdmin(req) {
+    if (req.user == null) {
+        return false
+    }
+
+    if (req.user.type != "admin") {
+        return false
+    }
+
+    return true
+}
+
+export function isCustomer(req) {
+    if (req.user == null) {
+        return false
+    }
+
+    if (req.user.type != "Customer") {
+        return false
+    }
+
+    return true
+}

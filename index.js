@@ -6,6 +6,9 @@ import mongoose from 'mongoose';
 import userRouter from './routes/userRouter.js';
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
+import productRouter from './routes/productRouter.js';
+import orderRouter from "./routes/orderRouter.js";
+
 dotenv.config();
 
 
@@ -13,11 +16,11 @@ const app = express();
 const mongoUrl = process.env.MONGO_DB_URL
 
 
- mongoose.connect (mongoUrl,{})
+mongoose.connect(mongoUrl, {})
 
- const connection=mongoose.connection;
+const connection = mongoose.connection;
 
-connection.once("open",()=>{
+connection.once("open", () => {
     console.log("Database Connected");
 })
 
@@ -62,16 +65,16 @@ app.post("/",
 }
 );*/
 app.use(
-    (req,res,next)=>{
-        const token = req.header("Authorization")?.replace("Bearer","")
+    (req, res, next) => {
+        const token = req.header("Authorization")?.replace("Bearer", "")
         console.log(token);
 
-        if(token !=null){
-            jwt.verify(token,process.env.SECRET,(error , decoded)=>{
-                
-                if(!error){
-                   // console.log(decoded)
-                    req.user= decoded
+        if (token != null) {
+            jwt.verify(token, process.env.SECRET, (error, decoded) => {
+
+                if (!error) {
+                    // console.log(decoded)
+                    req.user = decoded
                 }
             })
         }
@@ -80,11 +83,13 @@ app.use(
     }
 )
 
-app.use("/api/users",userRouter)
+app.use("/api/users", userRouter)
+app.use("/api/products", productRouter)
+app.use("/api/orders", orderRouter)
 
-app.listen( 
+app.listen(
     5000,
-    ()=>{
+    () => {
         console.log('Server is running on port 5000');
     }
 )
